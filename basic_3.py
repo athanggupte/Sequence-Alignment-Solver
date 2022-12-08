@@ -1,4 +1,8 @@
 import sys
+from efficient_3 import EfficientSolver
+import time
+import psutil
+
 
 # Constants
 delta = 30
@@ -10,6 +14,12 @@ alpha = [
 ]
 char_to_idx = { 'A': 0, 'C': 1, 'G': 2, 'T': 3 }
 
+def get_space():
+    process = psutil.Process()
+    memory_info = process.memory_info()
+    memory_consumed = int(memory_info.rss/1024)
+
+    return memory_consumed
 
 def process_input(filename):
     with open(filename, 'r') as file:
@@ -30,6 +40,7 @@ def process_input(filename):
         assert(len(strings[0]) == 2**steps[0] * len(orig_strings[0]))
         assert(len(strings[1]) == 2**steps[1] * len(orig_strings[1]))
     return strings
+
 
 
 class BasicSolver:
@@ -100,22 +111,59 @@ class BasicSolver:
         return a1[::-1], a2[::-1]
 
     def solve(self, s1, s2):
+
         opt = self._find_optimal_value(s1, s2)
         a1, a2 = self._find_optimal_alignment(opt, s1, s2)
+
         return a1, a2, opt[len(s1)][len(s2)]
 
-
 def main(input_fn, output_fn):
+    dumb = False
+
     # Inputs
     s1, s2 = process_input(input_fn)
 
-    # Solver
-    solver = BasicSolver(delta, alpha, char_to_idx)
+    if (dumb):
+        # Solver
+        solver1 = BasicSolver(delta, alpha, char_to_idx)
 
-    # Alignments
-    a1, a2, opt = solver.solve(s1, s2)
+        # Alignments
+        startTime = time.time()
+        startSpace = get_space()
+        basicA1, basicA2, basicOpt = solver1.solve(s1, s2)
+        endTime = (time.time() - startTime) * 1000
+        endSpace = get_space() - startSpace
 
-    return a1, a2, opt
+        f = open(output_fn, 'w')
+
+        print(basicOpt, file=f)
+        print(basicA1, file=f)
+        print(basicA2, file=f)
+        print(endTime, file = f)
+        print(endSpace, file=f)
+
+        f.close()
+    else:
+        solver2 = EfficientSolver(delta, alpha, char_to_idx);
+
+        startTime = time.time()
+        startSpace = get_space()
+        efficientA1, efficientA2, efficientOpt = solver2.solve(s1, s2)
+        endTime = (time.time() - startTime) * 1000
+        endSpace = get_space() - startSpace
+
+        f = open(output_fn, 'w')
+
+        print(efficientOpt, file=f)
+        print(efficientA1, file=f)
+        print(efficientA2, file=f)
+        print(endTime, file = f)
+        print(endSpace, file=f)
+
+        f.close()
+
+
+    return
 
 
 if __name__ == '__main__':

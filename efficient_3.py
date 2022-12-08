@@ -1,4 +1,5 @@
 import sys
+import psutil
 
 # Constants
 delta = 30
@@ -9,7 +10,6 @@ alpha = [
     [ 94,  48, 110,   0],
 ]
 char_to_idx = { 'A': 0, 'C': 1, 'G': 2, 'T': 3 }
-
 
 def process_input(filename):
     with open(filename, 'r') as file:
@@ -58,7 +58,7 @@ class EfficientSolver:
                     delta + opt[1-r][j],
                     delta + opt[r][j-1]
                 ])
-        
+
         if i % 2 == 0:
             return opt[::-1]
         return opt
@@ -134,6 +134,7 @@ class EfficientSolver:
 
     def solve(self, s1, s2):
         a1, a2, opt = self.recursive(s1, s2)
+
         return a1, a2, opt
 
 
