@@ -1,5 +1,4 @@
 import sys
-from efficient_3 import EfficientSolver
 import time
 import psutil
 
@@ -118,50 +117,30 @@ class BasicSolver:
         return a1, a2, opt[len(s1)][len(s2)]
 
 def main(input_fn, output_fn):
-    dumb = False
 
     # Inputs
     s1, s2 = process_input(input_fn)
 
-    if (dumb):
-        # Solver
-        solver1 = BasicSolver(delta, alpha, char_to_idx)
+    # Solver
+    solver = BasicSolver(delta, alpha, char_to_idx)
 
-        # Alignments
-        startTime = time.time()
-        startSpace = get_space()
-        basicA1, basicA2, basicOpt = solver1.solve(s1, s2)
-        endTime = (time.time() - startTime) * 1000
-        endSpace = get_space() - startSpace
+    # Alignments
+    startTime = time.time()
+    #startSpace = get_space()
+    basicA1, basicA2, basicOpt = solver.solve(s1, s2)
+    endTime = (time.time() - startTime) * 1000
+    #endSpace = get_space() - startSpace
+    endSpace = get_space()
 
-        f = open(output_fn, 'w')
+    f = open(output_fn, 'w')
 
-        print(basicOpt, file=f)
-        print(basicA1, file=f)
-        print(basicA2, file=f)
-        print(endTime, file = f)
-        print(endSpace, file=f)
+    print(basicOpt, file=f)
+    print(basicA1, file=f)
+    print(basicA2, file=f)
+    print(endTime, file = f)
+    print(endSpace, file=f)
 
-        f.close()
-    else:
-        solver2 = EfficientSolver(delta, alpha, char_to_idx);
-
-        startTime = time.time()
-        startSpace = get_space()
-        efficientA1, efficientA2, efficientOpt = solver2.solve(s1, s2)
-        endTime = (time.time() - startTime) * 1000
-        endSpace = get_space() - startSpace
-
-        f = open(output_fn, 'w')
-
-        print(efficientOpt, file=f)
-        print(efficientA1, file=f)
-        print(efficientA2, file=f)
-        print(endTime, file = f)
-        print(endSpace, file=f)
-
-        f.close()
-
+    f.close()
 
     return
 

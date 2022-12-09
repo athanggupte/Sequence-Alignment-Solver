@@ -1,5 +1,6 @@
 import sys
 import psutil
+import time
 
 # Constants
 delta = 30
@@ -138,17 +139,36 @@ class EfficientSolver:
         return a1, a2, opt
 
 
+def get_space():
+    process = psutil.Process()
+    memory_info = process.memory_info()
+    memory_consumed = int(memory_info.rss/1024)
+
+    return memory_consumed
+
 def main(input_fn, output_fn):
-    # Inputs
     s1, s2 = process_input(input_fn)
+   
+    solver = EfficientSolver(delta, alpha, char_to_idx);
 
-    # Solver
-    solver = EfficientSolver(delta, alpha, char_to_idx)
+    startTime = time.time()
+    #startSpace = get_space()
+    efficientA1, efficientA2, efficientOpt = solver.solve(s1, s2)
+    endTime = (time.time() - startTime) * 1000
+    #endSpace = get_space() - startSpace
+    endSpace = get_space()
 
-    # Alignments
-    a1, a2, opt = solver.solve(s1, s2)
+    f = open(output_fn, 'w')
 
-    return a1, a2, opt
+    print(efficientOpt, file=f)
+    print(efficientA1, file=f)
+    print(efficientA2, file=f)
+    print(endTime, file = f)
+    print(endSpace, file=f)
+
+    f.close()
+
+    return
 
 
 if __name__ == '__main__':
